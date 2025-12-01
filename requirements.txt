@@ -1,0 +1,10 @@
+fastapi
+uvicorn[standard]
+tenacity
+pydantic>=2.5.0
+pydantic-settings
+pytest
+pytest-asyncio
+pytest-mock
+httpx
+python-dotenv
