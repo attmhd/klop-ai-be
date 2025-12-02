@@ -5,11 +5,17 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
-# Import Routers
+# --- IMPORT ROUTERS ---
+# Menggunakan try-except agar aman dijalankan dari root folder maupun folder app
 try:
+    from app.modules.enhance.router import (
+        router as enhance_router,
+    )
     from app.modules.generation.router import router as gen_router
 except ModuleNotFoundError:
-    # Fallback when running without package context (e.g., python app/main.py)
+    from .modules.enhance.router import (
+        router as enhance_router,
+    )
     from .modules.generation.router import router as gen_router
 
 # Setup Logger
@@ -20,7 +26,7 @@ app = FastAPI(
     title="Klop! AI Assessment API",
     description="AI untuk generate soal, scoring, dan insight.",
     version="1.0.0",
-    docs_url="/docs",  # Swagger UI
+    docs_url="/docs",
     redoc_url="/redoc",
 )
 
@@ -71,7 +77,11 @@ async def http_exception_handler(request: Request, exc: StarletteHTTPException):
 
 
 # --- 3. REGISTER ROUTERS ---
+# Router Generate (POST /api/v1/generate)
 app.include_router(gen_router, prefix="/api/v1/generate", tags=["Generation"])
+
+# Router Enhance (POST /api/v1/enhance)
+app.include_router(enhance_router, prefix="/api/v1/enhance", tags=["Enhancement"])
 
 
 # --- 4. HEALTH CHECK ---
