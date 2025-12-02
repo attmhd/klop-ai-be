@@ -18,20 +18,19 @@ class GenerationService:
 
     async def generate_quiz(self, payload: GenerateRequest) -> GenerateData:
         try:
-            # 1. Prepare User Prompt (UPDATE DI SINI)
-            # Menambahkan parameter question_count ke dalam string prompt
+            # 1. Prepare User Prompt
             user_content = (
                 f"Role: {payload.role}\n"
                 f"Location: {payload.location}\n"
                 f"Level: {payload.level}\n"
                 f"Criteria: {payload.criteria}\n"
-                f"Question Count: {payload.question_count}"
+                f"Question Count: {payload.question_count}\n"
+                f"Question Type: {payload.question_type}"
             )
 
-            # 2. Call LLM (Gemini)
-            # json_mode=False karena kita minta format YAML/TOON
+            # 2. Call LLM
             logger.info(
-                f"Generating {payload.question_count} assessment(s) for: {payload.role}"
+                f"Generating {payload.question_count} {payload.question_type} question(s)"
             )
 
             raw_toon_response = await self.llm.call_llm(
@@ -41,11 +40,8 @@ class GenerationService:
                 temperature=0.4,
             )
 
-            # 3. Parse TOON/YAML String -> Python Dict
-            # Pastikan parser Anda bisa menangani list of questions di dalam YAML
+            # 3. Parse & Validate
             parsed_dict = parse_toon_string(raw_toon_response)
-
-            # 4. Validasi ke Schema Pydantic
             return GenerateData(**parsed_dict)
 
         except Exception as e:
