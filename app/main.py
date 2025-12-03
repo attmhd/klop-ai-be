@@ -6,8 +6,7 @@ from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from app.modules.answers.router import router as answers_router
-
-# --- IMPORT ROUTERS ---
+from app.modules.assessments.router import router as assessments_router
 from app.modules.questions.router import router as questions_router
 
 # Setup Logger
@@ -71,6 +70,7 @@ async def http_exception_handler(request: Request, exc: StarletteHTTPException):
 # --- REGISTER ROUTERS ---
 app.include_router(questions_router, prefix="/api/v1/question", tags=["Question"])
 app.include_router(answers_router, prefix="/api/v1/answer", tags=["Answer"])
+app.include_router(assessments_router, prefix="/api/v1/assessment", tags=["Assessment"])
 
 
 # --- HEALTH CHECK ---
