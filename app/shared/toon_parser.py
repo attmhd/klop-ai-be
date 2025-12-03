@@ -44,6 +44,8 @@ def parse_toon_string(raw_text: str) -> dict:
             raw_text.replace("```yaml", "")
             .replace("```json", "")  # Jaga-jaga jika AI salah label
             .replace("```", "")
+            .replace("*", "")
+            .replace("\n", "")
             .strip()
         )
 
@@ -55,9 +57,6 @@ def parse_toon_string(raw_text: str) -> dict:
         if not isinstance(data, (dict, list)):
             raise ValueError("Hasil parsing bukan Dictionary atau List valid.")
 
-        # 4. Normalisasi key TOON agar sesuai schema Pydantic:
-        #    - questions[1] -> questions
-        #    - positive[2]  -> positive
         normalized = _normalize_counts(data)
 
         return normalized

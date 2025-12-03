@@ -1,7 +1,9 @@
 from fastapi import APIRouter, HTTPException, status
 
-# Import Schemas & Service
+# Import Schemas
 from .schemas import (
+    ComprehensiveRequest,  # <-- Schema baru wajib diimport
+    ComprehensiveResponse,
     CreateQuestionRequest,
     QuestionRequest,
     SimpleQuestionResponse,
@@ -14,13 +16,12 @@ service = QuestionService()
 
 @router.post(
     "/generate",
-    response_model=SimpleQuestionResponse,  # <-- Langsung Model Data
+    response_model=SimpleQuestionResponse,
     status_code=status.HTTP_200_OK,
     summary="Create New Question",
 )
 async def create_new_question(payload: CreateQuestionRequest):
     try:
-        # Langsung return hasil dari service
         return await service.create_question(payload)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -35,5 +36,21 @@ async def create_new_question(payload: CreateQuestionRequest):
 async def enhance_question(payload: QuestionRequest):
     try:
         return await service.enhance_question(payload)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post(
+    "/comprehensive",
+    response_model=ComprehensiveResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Create Comprehensive Question",
+    response_model_exclude_none=True,
+)
+async def create_comprehensive_question(
+    payload: ComprehensiveRequest,
+):  # <-- Input Schema Baru
+    try:
+        return await service.create_comprehensive(payload)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

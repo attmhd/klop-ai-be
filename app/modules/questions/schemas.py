@@ -3,39 +3,32 @@ from typing import List, Optional
 from pydantic import BaseModel, Field
 
 
-# --- INPUT: Create New & Comprehensive
+# --- INPUT ---
 class CreateQuestionRequest(BaseModel):
-    title: str = Field(
-        ..., description="Role atau Judul Posisi", example="Backend Engineer"
-    )
-    description: str = Field(
-        ...,
-        description="Konteks, Level, atau Kriteria",
-        example="Senior Level, Expert in Golang",
-    )
-
-
-# --- INPUT: Enhance
-class QuestionRequest(BaseModel):
     title: str = Field(..., description="Role")
-    description: str = Field(..., description="Konteks")
-    question: str = Field(
-        ..., description="Draft Pertanyaan", example="Tentang Goroutine"
-    )
+    description: str = Field(..., description="Context")
 
 
-# --- OUTPUT: Simple ---
-class SimpleQuestionResponse(BaseModel):
+class QuestionRequest(BaseModel):
+    title: str
+    description: str
     question: str
 
 
-# --- OUTPUT: Comprehensive ---
-class AnswerOptionItem(BaseModel):
-    answerOption: Optional[str] = None
+class ComprehensiveRequest(BaseModel):
+    title: str = Field(..., description="Role")
+    description: str = Field(..., description="Context")
+    isAnswerOptions: bool = Field(..., description="True = Pilihan Ganda")
+
+
+# --- OUTPUT ---
+class SimpleQuestionResponse(BaseModel):
+    question: str
 
 
 class ComprehensiveResponse(BaseModel):
     question: str
     isAnswerOptions: Optional[bool] = None
-    answerOptions: Optional[List[AnswerOptionItem]] = None
+    answerOptions: Optional[List[str]] = None
+
     expectedAnswer: str

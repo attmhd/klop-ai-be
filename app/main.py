@@ -67,7 +67,7 @@ async def http_exception_handler(request: Request, exc: StarletteHTTPException):
 
 
 # --- REGISTER ROUTERS ---
-app.include_router(questions_router, prefix="/api/v1/question", tags=["Generation"])
+app.include_router(questions_router, prefix="/api/v1/question", tags=["Question"])
 
 
 # --- HEALTH CHECK ---
