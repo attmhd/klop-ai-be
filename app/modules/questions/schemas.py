@@ -3,7 +3,6 @@ from typing import List, Optional
 from pydantic import BaseModel, Field
 
 
-# --- INPUT ---
 class CreateQuestionRequest(BaseModel):
     title: str = Field(..., description="Role")
     description: str = Field(..., description="Context")
@@ -21,7 +20,6 @@ class ComprehensiveRequest(BaseModel):
     isAnswerOptions: bool = Field(..., description="True = Pilihan Ganda")
 
 
-# --- OUTPUT ---
 class SimpleQuestionResponse(BaseModel):
     question: str
 

@@ -3,7 +3,6 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from app.core.config import settings
 
-# Skema ini membuat tombol "Authorize" (Gembok) muncul di Swagger UI
 security_scheme = HTTPBearer()
 
 

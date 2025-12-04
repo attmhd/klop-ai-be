@@ -21,7 +21,6 @@ def parse_json_response(raw_text: str) -> Union[Dict[str, Any], List[Any]]:
 
         data = json.loads(clean_text)
 
-        # Validasi tipe data (harus Dict atau List)
         if not isinstance(data, (dict, list)):
             raise ValueError(
                 f"Hasil parsing bukan Dictionary atau List, melainkan: {type(data)}"

@@ -3,7 +3,6 @@ from typing import List
 from pydantic import BaseModel, Field
 
 
-# --- INPUT ---
 class QuestionItem(BaseModel):
     question: str = Field(..., description="Teks pertanyaan asli")
     answer: str = Field(..., description="Jawaban yang diinput oleh kandidat")
@@ -20,7 +19,6 @@ class AssessmentRequest(BaseModel):
     )
 
 
-# --- OUTPUT ---
 class ScoredQuestionItem(BaseModel):
     question: str
     answer: str

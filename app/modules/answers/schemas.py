@@ -3,14 +3,12 @@ from typing import List
 from pydantic import BaseModel, Field
 
 
-# --- INPUT: ESSAY ---
 class ExpectedEssayRequest(BaseModel):
     title: str = Field(..., description="Role")
     description: str = Field(..., description="Context")
     question: str = Field(..., description="Pertanyaan Essay")
 
 
-# --- INPUT: CHOICES ---
 class ExpectedChoiceRequest(BaseModel):
     title: str = Field(..., description="Role")
     description: str = Field(..., description="Context")
@@ -20,7 +18,6 @@ class ExpectedChoiceRequest(BaseModel):
     )
 
 
-# --- OUTPUT ---
 class ExpectedAnswerResponse(BaseModel):
     expectedAnswer: str = Field(
         ..., description="Kunci jawaban (Keywords atau Pilihan Opsi)"

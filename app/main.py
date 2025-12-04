@@ -10,7 +10,6 @@ from app.modules.answers.router import router as answers_router
 from app.modules.assessments.router import router as assessments_router
 from app.modules.questions.router import router as questions_router
 
-# Setup Logger
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -23,10 +22,9 @@ app = FastAPI(
     dependencies=[Depends(verify_api_token)],
 )
 
-# --- CONFIGURATION: CORS ---
 origins = [
-    "http://localhost:3000",  # React default port
-    "http://localhost:8000",  # Local API
+    "https://klop-ai.vercel.app",
+    "http://localhost:8000",
     "*",
 ]
 
@@ -34,13 +32,11 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],  # Allow GET, POST, PUT, DELETE, etc.
+    allow_methods=["*"],
     allow_headers=["*"],
 )
 
 
-# --- GLOBAL EXCEPTION HANDLER ---
-# Menangani Error tak terduga (500 Internal Server Error)
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
     logger.error(f"Global Exception: {str(exc)}")
@@ -55,7 +51,6 @@ async def global_exception_handler(request: Request, exc: Exception):
     )
 
 
-# Menangani HTTP Exception (misal: 401 Unauthorized, 404 Not Found)
 @app.exception_handler(StarletteHTTPException)
 async def http_exception_handler(request: Request, exc: StarletteHTTPException):
     return JSONResponse(
@@ -69,13 +64,11 @@ async def http_exception_handler(request: Request, exc: StarletteHTTPException):
     )
 
 
-# --- REGISTER ROUTERS ---
 app.include_router(questions_router, prefix="/api/v1/question", tags=["Question"])
 app.include_router(answers_router, prefix="/api/v1/answer", tags=["Answer"])
 app.include_router(assessments_router, prefix="/api/v1/assessment", tags=["Assessment"])
 
 
-# --- HEALTH CHECK ---
 @app.get("/health", tags=["System"])
 def health_check():
     return {"status": "ok", "service": "Klop! AI", "version": "1.0.0"}

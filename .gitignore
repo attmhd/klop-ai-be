@@ -1,4 +1,4 @@
-.env*
+.env
 klop-ai/
 tests/
 *__pycache__/
