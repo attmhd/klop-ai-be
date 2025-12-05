@@ -38,7 +38,7 @@ class AssessmentService:
                 system_prompt=SCORING_PROMPT,
                 user_prompt=user_content,
                 json_mode=True,
-                temperature=0.2,
+                temperature=0.4,
             )
 
             data = parse_json_response(raw_response)

@@ -29,7 +29,7 @@ class QuestionService:
                 system_prompt=system_prompt,
                 user_prompt=user_content,
                 json_mode=True,
-                temperature=0.4,
+                temperature=0.6,
             )
             return parse_json_response(raw_response)
         except Exception as e:

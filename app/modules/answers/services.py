@@ -23,7 +23,7 @@ class AnswerService:
         self.llm = BaseLLMClient()
 
     async def _call_llm(self, prompt, content):
-        raw = await self.llm.call_llm(prompt, content, json_mode=True, temperature=0.3)
+        raw = await self.llm.call_llm(prompt, content, json_mode=True, temperature=0.5)
         return parse_json_response(raw)
 
     # --- ENDPOINT /expected/essay ---
