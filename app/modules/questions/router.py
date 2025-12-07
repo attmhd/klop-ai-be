@@ -1,4 +1,8 @@
-from fastapi import APIRouter, HTTPException, status
+from fastapi import (  # pyright: ignore[reportMissingImports]
+    APIRouter,
+    HTTPException,
+    status,
+)
 
 # Import Schemas
 from .schemas import (
@@ -49,7 +53,7 @@ async def enhance_question(payload: QuestionRequest):
 )
 async def create_comprehensive_question(
     payload: ComprehensiveRequest,
-):  # <-- Input Schema Baru
+):
     try:
         return await service.create_comprehensive(payload)
     except Exception as e:

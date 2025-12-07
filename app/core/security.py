@@ -1,5 +1,12 @@
-from fastapi import HTTPException, Security, status
-from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from fastapi import (  # pyright: ignore[reportMissingImports]
+    HTTPException,
+    Security,
+    status,
+)
+from fastapi.security import (  # pyright: ignore[reportMissingImports]
+    HTTPAuthorizationCredentials,
+    HTTPBearer,
+)
 
 from app.core.config import settings
 

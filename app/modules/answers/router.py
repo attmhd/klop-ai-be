@@ -1,4 +1,8 @@
-from fastapi import APIRouter, HTTPException, status
+from fastapi import (  # pyright: ignore[reportMissingImports]
+    APIRouter,
+    HTTPException,
+    status,
+)
 
 from .schemas import (
     AnswerOptionsResponse,

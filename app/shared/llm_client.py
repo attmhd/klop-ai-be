@@ -1,8 +1,8 @@
 import logging
 from typing import Any, Optional
 
-from openai import AsyncOpenAI
-from tenacity import (
+from openai import AsyncOpenAI  # pyright: ignore[reportMissingImports]
+from tenacity import (  # pyright: ignore[reportMissingImports]
     retry,
     stop_after_attempt,
     wait_exponential,
@@ -11,9 +11,6 @@ from tenacity import (
 from app.core.config import settings
 
 try:
-    from google import genai
-    from google.genai import types
-
     _HAS_GEMINI = True
 except ImportError:
     _HAS_GEMINI = False
@@ -48,11 +45,17 @@ class BaseLLMClient:
             return
 
         if not gemini_api_key or not self.gemini_model:
-            logger.debug("GEMINI_API_KEY or GEMINI_MODEL not set. Fallback disabled.")
+            logger.debug(
+                "GEMINI_API_KEY atau GEMINI_MODEL tidak diset. Fallback dinonaktifkan."
+            )
             return
 
         try:
-            self.gemini_client = genai.Client(api_key=gemini_api_key)
+            from google import (
+                genai as _genai,  # pyright: ignore[reportMissingImports, reportAttributeAccessIssue]
+            )
+
+            self.gemini_client = _genai.Client(api_key=gemini_api_key)
             logger.info("Gemini client initialized successfully for fallback.")
         except Exception as e:
             logger.warning(f"Failed to initialize Gemini client: {e}")
@@ -105,10 +108,17 @@ class BaseLLMClient:
         temperature: float,
     ) -> str:
         """Memanggil Fallback LLM (Gemini)."""
-        if not self.gemini_client or not self.gemini_model:
+        if not self.gemini_client or not self.gemini_model or not _HAS_GEMINI:
             raise RuntimeError("Gemini fallback is not available config-wise.")
 
-        config = types.GenerateContentConfig(
+        try:
+            from google.genai import (  # pyright: ignore[reportMissingImports]
+                types as _types,
+            )
+        except Exception as e:
+            raise RuntimeError(f"Gemini types unavailable: {e}")
+
+        config = _types.GenerateContentConfig(
             system_instruction=system_prompt,
             temperature=temperature,
             response_mime_type="application/json" if json_mode else "text/plain",

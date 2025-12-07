@@ -43,7 +43,19 @@ class AssessmentService:
 
             data = parse_json_response(raw_response)
 
-            return AssessmentResponse(**data)
+            if not isinstance(data, dict):
+                logger.warning("Parsed LLM response is not a dict; defaulting fields.")
+                data = {}
+
+            summary = str(data.get("summary", ""))
+            questions = data.get("questions", [])
+            if not isinstance(questions, list):
+                logger.warning(
+                    "Questions field is not a list; defaulting to empty list."
+                )
+                questions = []
+
+            return AssessmentResponse(summary=summary, questions=questions)
 
         except Exception as e:
             logger.error(f"Assessment Scoring Error: {str(e)}")

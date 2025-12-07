@@ -1,9 +1,18 @@
 import logging
 
-from fastapi import Depends, FastAPI, Request, status
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
-from starlette.exceptions import HTTPException as StarletteHTTPException
+from fastapi import (  # pyright: ignore[reportMissingImports]
+    Depends,
+    FastAPI,
+    Request,
+    status,
+)
+from fastapi.middleware.cors import (  # pyright: ignore[reportMissingImports]
+    CORSMiddleware,  # pyright: ignore[reportMissingImports]
+)
+from fastapi.responses import JSONResponse  # pyright: ignore[reportMissingImports]
+from starlette.exceptions import (  # pyright: ignore[reportMissingImports]
+    HTTPException as StarletteHTTPException,  # pyright: ignore[reportMissingImports]
+)
 
 from app.core.security import verify_api_token
 from app.modules.answers.router import router as answers_router

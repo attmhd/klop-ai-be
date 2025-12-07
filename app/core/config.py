@@ -1,6 +1,6 @@
 import os
 
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings  # pyright: ignore[reportMissingImports]
 
 
 class Settings(BaseSettings):

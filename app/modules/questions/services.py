@@ -23,7 +23,7 @@ class QuestionService:
     def __init__(self):
         self.llm = BaseLLMClient()
 
-    async def _call_llm(self, system_prompt: str, user_content: str) -> dict:
+    async def _call_llm(self, system_prompt: str, user_content: str) -> dict | list:
         try:
             raw_response = await self.llm.call_llm(
                 system_prompt=system_prompt,
@@ -41,7 +41,17 @@ class QuestionService:
     ) -> SimpleQuestionResponse:
         user_content = f"Title: {payload.title}\nDescription: {payload.description}"
         data = await self._call_llm(GENERATE_QUESTION_PROMPT, user_content)
-        return SimpleQuestionResponse(**data)
+
+        # Normalize LLM response to a dict
+        if isinstance(data, list):
+            data = data[0] if data else {}
+        if not isinstance(data, dict):
+            data = {}
+
+        # Ensure required field "question" is present
+        question = data.get("question") or ""
+
+        return SimpleQuestionResponse(question=question)
 
     async def enhance_question(
         self, payload: QuestionRequest
@@ -52,7 +62,17 @@ class QuestionService:
             f"Draft Question: {payload.question}"
         )
         data = await self._call_llm(ENHANCE_QUESTION_PROMPT, user_content)
-        return SimpleQuestionResponse(**data)
+
+        # Normalize LLM response to a dict with string keys
+        if isinstance(data, list):
+            data = data[0] if data else {}
+        if not isinstance(data, dict):
+            data = {}
+
+        # Ensure required field "question" is present
+        question = data.get("question") or ""
+
+        return SimpleQuestionResponse(question=question)
 
     async def create_comprehensive(
         self, payload: ComprehensiveRequest
@@ -67,8 +87,28 @@ class QuestionService:
 
         data = await self._call_llm(COMPREHENSIVE_PROMPT, user_content)
 
-        if not payload.isAnswerOptions:
+        # Normalize LLM response to a dict with string keys
+        if isinstance(data, list):
+            data = data[0] if data else {}
+        if not isinstance(data, dict):
+            data = {}
+
+        # Ensure required fields are present
+        question = data.get("question") or ""
+        expected_answer = data.get("expectedAnswer") or ""
+
+        # Handle answer options based on requested type
+        if payload.isAnswerOptions:
+            # Normalize possible keys to "answerOptions"
+            answer_options = data.get("answerOptions") or data.get("options") or []
+            data["answerOptions"] = answer_options
+            data["isAnswerOptions"] = True
+        else:
             data["answerOptions"] = None
-            data["isAnswerOptions"] = None
+            data["isAnswerOptions"] = False
+
+        # Set normalized required fields back into data
+        data["question"] = question
+        data["expectedAnswer"] = expected_answer
 
         return ComprehensiveResponse(**data)
